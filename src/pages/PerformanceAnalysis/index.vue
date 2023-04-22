@@ -2,8 +2,14 @@
 	<div class="container flex fc">
 		<!-- 顶部筛选 -->
 		<div class="top_form width-100 pl20 pr20 flex ac jsb mb10">
-			<div>店铺</div>
 			<div class="flex ac">
+				<div class="f14 text_color">店铺：</div>
+				<el-select ref="storeSelect" v-model="store_ids" size="mini" multiple filterable collapse-tags placeholder="全部" @change="performanceReport">
+					<el-option v-for="item in store_list" :key="item.dept_id" :label="item.shop_name" :value="item.dept_id">
+					</el-option>
+				</el-select>
+			</div>
+			<div class="flex ac" @click="screen_overlay = true">
 				<div class="f14 text_color mr4">高级筛选</div>
 				<img class="screen_icon" src="../../static/screen_icon.png">
 			</div>
@@ -16,22 +22,22 @@
 						<div class="f16 text_color fw-500">销售收入预估</div>
 						<img class="comment_icon" src="../../static/comment_icon.png">
 					</div>
-					<div class="item_value f28 bold">900.00万</div>
+					<div class="item_value f28 bold">{{xssryg.xssryg}}万</div>
 					<div class="small_value flex jsb small_text">
 						<div>销售收入月目标：</div>
-						<div>27384.23万</div>
+						<div>{{xssryg.xssrymb}}万</div>
 					</div>
 					<div class="small_value flex jsb small_text">
 						<div>月度完成率：</div>
-						<div>34.83%</div>
+						<div>{{xssryg.ydwcl}}%</div>
 					</div>
 					<div class="small_value flex jsb small_text">
 						<div>日累计-销售收入：</div>
-						<div>27384.23万</div>
+						<div>{{xssryg.rlj_xssr}}万</div>
 					</div>
 					<div class="small_value flex jsb small_text">
 						<div>周期内完成率：</div>
-						<div>27.38%</div>
+						<div>{{xssryg.zqnwcl}}%</div>
 					</div>
 				</div>
 				<div class="view_item pl6 pr8 pt12 pb12">
@@ -39,22 +45,22 @@
 						<div class="f16 text_color fw-500">营销费用预估</div>
 						<img class="comment_icon" src="../../static/comment_icon.png">
 					</div>
-					<div class="item_value f28 bold">900.00万</div>
+					<div class="item_value f28 bold">{{yxfyyg.yxfyyg}}万</div>
 					<div class="small_value flex jsb small_text">
 						<div>营销费用月目标：</div>
-						<div>27384.23万</div>
+						<div>{{yxfyyg.yxfyymb}}万</div>
 					</div>
 					<div class="small_value flex jsb small_text">
 						<div>月度使用率：</div>
-						<div>34.83%</div>
+						<div>{{yxfyyg.ydsyl}}%</div>
 					</div>
 					<div class="small_value flex jsb small_text">
 						<div>日累计-营销费用：</div>
-						<div>27384.23万</div>
+						<div>{{yxfyyg.rlj_yxfy}}万</div>
 					</div>
 					<div class="small_value flex jsb small_text">
 						<div>周期内完成率：</div>
-						<div>27.38%</div>
+						<div>{{yxfyyg.zqnsyl}}%</div>
 					</div>
 				</div>
 			</div>
@@ -64,22 +70,22 @@
 						<div class="f16 text_color fw-500">预估值-贡献毛益</div>
 						<img class="comment_icon" src="../../static/comment_icon.png">
 					</div>
-					<div class="item_value f28 bold">900.00万</div>
+					<div class="item_value f28 bold">{{ygz_gxmy.ygz_gxmy}}万</div>
 					<div class="small_value flex jsb small_text">
 						<div>贡献毛益月目标：</div>
-						<div>27384.23万</div>
+						<div>{{ygz_gxmy.gxmyymb}}万</div>
 					</div>
 					<div class="small_value flex jsb small_text">
 						<div>月度完成率：</div>
-						<div>34.83%</div>
+						<div>{{ygz_gxmy.ydwcl}}%</div>
 					</div>
 					<div class="small_value flex jsb small_text">
 						<div>日累计-贡献毛益：</div>
-						<div>27384.23万</div>
+						<div>{{ygz_gxmy.rlj_gxmy}}万</div>
 					</div>
 					<div class="small_value flex jsb small_text">
 						<div>周期内完成率：</div>
-						<div>27.38%</div>
+						<div>{{ygz_gxmy.zqnwcl}}%</div>
 					</div>
 				</div>
 				<div class="view_item pl6 pr8 pt12 pb12">
@@ -87,26 +93,26 @@
 						<div class="f16 text_color fw-500">预估值-贡献毛益率</div>
 						<img class="comment_icon" src="../../static/comment_icon.png">
 					</div>
-					<div class="item_value f28 bold">900.00万</div>
+					<div class="item_value f28 bold">{{ygz_gxmyl.gxmylyg}}%</div>
 					<div class="small_value flex jsb small_text">
 						<div>贡献毛益率月目标：</div>
-						<div>27384.23万</div>
+						<div>{{ygz_gxmyl.ymb_gxmyl}}%</div>
 					</div>
 					<div class="small_value flex jsb small_text">
-						<div>日累计算-贡献毛益率：</div>
-						<div>27384.23万</div>
+						<div>日累计-贡献毛益率：</div>
+						<div>{{ygz_gxmyl.rlj_gxmyl}}%</div>
 					</div>
 				</div>
 			</div>
-			<div class="jlryg width-100 pl6 pr8 pt12 pb12 mb10">
+			<div class="jlryg width-100 pl6 pr8 pt12 pb12 mb10" v-if="jlryg">
 				<div class="flex ac jsb">
 					<div class="f16 text_color fw-500">净利润预估</div>
 					<img class="comment_icon" src="../../static/comment_icon.png">
 				</div>
-				<div class="item_value f28 bold">900.00万</div>
+				<div class="item_value f28 bold">{{jlryg.jlryg}}万</div>
 				<div class="small_value flex small_text">
 					<div>净利润率：</div>
-					<div>27384.23万</div>
+					<div>{{jlryg.jlrl}}%</div>
 				</div>
 			</div>
 			<div class="table_box">
@@ -117,54 +123,321 @@
 						<img class="setting_icon ml14" src="../../static/setting_icon.png">
 					</div>
 				</div>
-				<div class="row flex jsb f14 pl12 pr6" v-for="item in per_title_list">
-					<div>{{item.row_name}}</div>
-					<div>{{item.row_field_name}}</div>
+				<div class="list_box" :class="{'put_height':per_arrow_status == 0}">
+					<div class="row flex jsb f14 pl12 pr6" v-for="item in per_title_list">
+						<div>{{item.row_name}}</div>
+						<div>{{per_total_data[item.row_field_name]?per_total_data[item.row_field_name]+item.unit:'无'}}</div>
+					</div>
 				</div>
-				<div class="bottom_setting flex jc ac">
-					<div class="setting_color f12 mr4">展开</div>
-					<img class="arrow_icon" src="../../static/down_icon.png">
+				<div class="bottom_setting flex jc ac" @click="per_arrow_status = !per_arrow_status">
+					<div class="setting_color f12 mr4">{{per_arrow_status == 0?'展开':'收起'}}</div>
+					<img class="arrow_icon" src="../../static/down_icon.png" v-if="per_arrow_status == 0">
+					<img class="arrow_icon" src="../../static/arrow_up.png" v-else>
 				</div>
 			</div>
 		</div>
+		<!-- 高级筛选 -->
+		<van-overlay :show="screen_overlay" @click="screen_overlay = false">
+			<div class="wrapper" @click.stop>
+				<div class="overlay_title flex ac jse pl20 pr20 relative border_bottom">
+					<div class="title text_color f15 fw-500">选择筛选条件</div>
+					<img class="close_icon" src="../../static/close_icon.png" @click="screen_overlay = false">
+				</div>
+				<div class="screen_row flex ac border_bottom pl10 pr10">
+					<div class="f14 text_color">项目部：</div>
+					<el-cascader
+					size="mini"
+					ref="cascader"
+					:options="dept_list"
+					:props="props"
+					@change="getIds"
+					filterable
+					collapse-tags
+					></el-cascader>
+				</div>
+				<div class="screen_row flex ac border_bottom pl10 pr10">
+					<div class="f14 text_color">平台：</div>
+					<el-select v-model="plat_ids" size="small" @change="getStoreList" multiple filterable collapse-tags placeholder="全部">
+						<el-option v-for="item in plat_list" :key="item" :label="item" :value="item">
+						</el-option>
+					</el-select>
+				</div>
+				<div class="screen_row flex ac border_bottom pl10 pr10">
+					<div class="f14 text_color">店铺：</div>
+					<el-select v-model="store_ids" size="small" multiple filterable collapse-tags placeholder="全部">
+						<el-option v-for="item in store_list" :key="item.dept_id" :label="item.shop_name" :value="item.dept_id">
+						</el-option>
+					</el-select>
+				</div>
+				<div class="screen_row flex ac border_bottom pl10 pr10">
+					<div class="f14 text_color">品牌：</div>
+					<el-select size="small" v-model="pp_ids" multiple filterable collapse-tags placeholder="全部">
+						<el-option v-for="item in pp_list" :key="item" :label="item" :value="item">
+						</el-option>
+					</el-select>
+				</div>
+				<div class="screen_row flex ac border_bottom pl10 pr10">
+					<div class="f14 text_color">公司：</div>
+					<el-select size="small" v-model="company" multiple filterable collapse-tags placeholder="全部">
+						<el-option v-for="item in company_list" :key="item" :label="item" :value="item">
+						</el-option>
+					</el-select>
+				</div>
+				<div class="screen_row flex ac border_bottom pl10 pr10">
+					<div class="f14 text_color">开始日期：</div>
+					<el-date-picker
+					size="small"
+					v-model="start_time"
+					value-format="yyyy-MM-dd"
+					type="date"
+					:picker-options="startDateOptions"
+					placeholder="开始日期">
+				</el-date-picker>
+			</div>
+			<div class="screen_row flex ac border_bottom pl10 pr10">
+				<div class="f14 text_color">结束日期：</div>
+				<el-date-picker
+				size="small"
+				v-model="end_time"
+				value-format="yyyy-MM-dd"
+				type="date"
+				:picker-options="endDateOptions"
+				placeholder="结束日期">
+			</el-date-picker>
+		</div>
+		<div class="screen_row flex ac border_bottom pl10 pr10">
+			<div class="f14 text_color">考核店铺：</div>
+			<el-select size="small" v-model="audit_flag" placeholder="请选择">
+				<el-option label="否" value="0"></el-option>
+				<el-option label="是" value="1"></el-option>
+			</el-select>
+		</div>
+		<div class="flex">
+			<div class="button flex-1 fw-600 f14 text_color" @click="resetScreen">重置</div>
+			<div class="line"></div>
+			<div class="button flex-1 fw-600 f14 text_color" @click="performanceReport">确定</div>
+		</div>
 	</div>
+</van-overlay>
+<!-- 加载中 -->
+<van-overlay :show="loading" class="flex ac jc">
+	<van-loading size="24px" vertical color="#0094ff">加载中...</van-loading>
+</van-overlay>
+</div>
 </template>
 <script>
 	import resource from '../../api/resource.js'
+	import {getMonthStartDate,getCurrentDate} from '../../utils/index.js'
 	export default{
 		data(){
 			return{
+				screen_overlay:false,		//筛选器弹窗
+				dept_list: [],				//部门列表	
+				dept_ids:[],				//选中的部门id列表
+				plat_list:[],				//平台列表
+				plat_ids:[],				//选中的平台列表
+				store_list: [],				//店铺列表	
+				store_ids:[],				//选中的店铺id列表
+				props:{
+					multiple:true,
+					value:'dept_id',
+					label:'dept_name',
+					children:'list',
+				},
+				pp_list:[],					//品牌列表
+				pp_ids:[],					//选中的品牌
+				company_list:[],			//公司列表
+				company:[],					//选中的公司
+				startDateOptions: {
+					disabledDate:(time) =>{
+						if(this.end_time){
+							return time.getTime() > new Date(this.end_time).getTime();
+						}else{
+							return false;
+						};
+					}
+				},
+				endDateOptions: {
+					disabledDate:(time) =>{
+						if(this.start_time){
+							return time.getTime() < new Date(this.start_time).getTime();
+						}else{
+							return false;
+						};
+					}
+				},
+				start_time:getMonthStartDate(),			//发货时间
+				end_time:getCurrentDate(),				//发货时间
+				audit_flag:'0',				//是否考核店铺
+				xssryg:{},							//销售收入预估
+				yxfyyg:{},							//营销费用预估
+				ygz_gxmy:{},						//预估值-贡献毛益
+				ygz_gxmyl:{},						//预估值-贡献毛益率
+				jlryg:null,							//净利润预估
 				per_title_list:[],			//业绩分析表头
+				per_table_list:[],			//业绩分析列表数据
+				per_total_data:{},			//业绩分析总计数据
+				per_arrow_status:0,			//业绩分析表格收起状态（0:收起；1：展开）
+				loading:false,
 			}
 		},
 		created(){
+			//部门列表
+			this.AjaxViewDept();
+			//平台列表
+			this.ajaxPlat();
+			// 获取所有店铺
+			this.getStoreList()
+			//品牌列表
+			this.ajaxDeerShopPp();
+			//公司列表
+			this.ajaxCompany();
 			//获取数据
 			this.performanceReport();
 		},
 		methods:{
+			//品牌列表
+			ajaxDeerShopPp(){
+				resource.ajaxDeerShopPp().then(res => {
+					if(res.data.code == 1){
+						this.pp_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//公司列表
+			ajaxCompany(){
+				resource.ajaxCompany().then(res => {
+					if(res.data.code == 1){
+						this.company_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			getIds(){
+				this.$nextTick(()=>{
+					var arr = [];
+					let select_department = this.$refs.cascader.getCheckedNodes({leafOnly:true});
+					select_department.map(s => {
+					if(s.parent){	//最后一层有父级
+						var m = s.parent;
+						if(m.checked){ //倒数第二层被全选了
+							if(m.parent){ //倒数第二层有父级
+								var d = m.parent;
+								if(d.checked){ //倒数第三层被全选了
+									if(arr.indexOf(d.value) == -1){
+										arr.push(d.value);
+									}
+								}else{
+									if(arr.indexOf(m.value) == -1){
+										arr.push(m.value);
+									}
+								}
+							}else{
+								if(arr.indexOf(m.value) == -1){
+									arr.push(m.value);
+								}
+							}
+						}else{
+							arr.push(s.value);
+						}
+					}else{	//只有一层
+						arr.push(s.value);
+					}
+				})
+					this.dept_ids = arr;
+					//店铺列表
+					this.getStoreList();
+				});
+			},
+			//部门列表
+			AjaxViewDept(){
+				resource.ajaxViewDept({from:this.from}).then(res => {
+					if(res.data.code == 1){
+						this.dept_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},	
+			//平台列表
+			ajaxPlat(){
+				resource.ajaxPlat().then(res => {
+					if(res.data.code == 1){
+						this.plat_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			// 获取所有店铺
+			getStoreList(){
+				this.store_ids = [];
+				let dept_id = this.dept_ids.join(',');
+				resource.ajaxViewStore({dept_id:dept_id,platform:this.plat_ids.join(',')}).then(res => {
+					if(res.data.code == 1){
+						this.store_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//点击重置筛选项
+			resetScreen(){
+				this.dept_ids = [];
+				this.$refs.cascader.$refs.panel.clearCheckedNodes();
+				this.$refs.cascader.$refs.panel.activePath = [];
+				this.plat_ids = [];
+				this.store_ids = [];
+				this.pp_ids = [];
+				this.company = [];
+				this.start_time = getMonthStartDate();			//发货时间
+				this.end_time = getCurrentDate();				//发货时间
+				this.audit_flag = '0';
+			},
 			//获取数据
 			performanceReport(){
 				let arg = {
-					platform:'',
-					dept_id:'',
-					shop_id:'',
-					start_time:'2023-04-01',
-					end_time:'2023-04-20',
-					audit_flag:'',
-					company:'',
-					pp:''
+					platform:this.plat_ids.join(','),
+					dept_id:this.dept_ids.join(','),
+					shop_id:this.store_ids.join(','),
+					start_time:this.start_time,
+					end_time:this.end_time,
+					audit_flag:this.audit_flag,
+					company:this.company.join(','),
+					pp:this.pp_ids.join(',')
 				}
+				this.screen_overlay = false;
+				this.$nextTick(()=>{
+					this.$refs.storeSelect.blur();
+				})
+				this.loading = true;
 				resource.performanceReport(arg).then(res => {
 					if(res.data.code == 1){
+						this.loading = false;
 						let data = res.data.data;
 						// 顶部几块
-						// this.xssryg = data.top.xssryg;
-						// this.yxfyyg = data.top.yxfyyg;
-						// this.ygz_gxmy = data.top.ygz_gxmy;
-						// this.ygz_gxmyl = data.top.ygz_gxmyl;
-						// this.jlryg = data.top.jlryg;		
+						this.xssryg = data.top.xssryg;
+						this.yxfyyg = data.top.yxfyyg;
+						this.ygz_gxmy = data.top.ygz_gxmy;
+						this.ygz_gxmyl = data.top.ygz_gxmyl;
+						this.jlryg = data.top.jlryg;		
 						//业绩分析表头
-						this.per_title_list = data.table_list.title_list;
+						let per_title_list = data.table_list.title_list;
+						per_title_list.splice(per_title_list.findIndex(item => item.row_field_name == "dpid"), 1);
+						per_title_list.splice(per_title_list.findIndex(item => item.row_field_name == "dpmc"), 1);
+						this.per_title_list = per_title_list;
+						this.per_table_list = data.table_list.list;
+						if(this.per_table_list.length == 0){
+							this.per_total_data = {};
+						}else if(this.per_table_list.length == 1){
+							this.per_total_data = this.per_table_list[0];
+						}else{
+							this.per_total_data = data.table_list.total_list;
+						}
+						
 						//表格数据
 						// this.shop_table_list_data = data.table_list.list;	//原始
 						// this.clTableData(this.shop_table_list_data);
@@ -198,6 +471,44 @@
 	}
 </script>
 <style lang="less" scoped>
+.wrapper{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	width: 354px;
+	background: #FFFFFF;
+	border-radius: 8px;
+	.overlay_title{
+		height: 56px;
+		.title{
+			position:absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%,-50%);
+		}
+		.close_icon{
+			width: 12px;
+			height: 12px;
+		}
+	}
+	.screen_row{
+		height: 54px;
+	}
+	.border_bottom{
+		border-bottom:1px solid #F8F8F8;
+	}
+	.line{
+		background:#F4F4F4;
+		width: 1px;
+		height: 42px;
+	}
+	.button{
+		height: 42px;
+		text-align: center;
+		line-height: 42px;
+	}
+}
 .top_form{
 	height: 48px;
 	background: linear-gradient(180deg, #E5EAFF 0%, #EAF0FF 32%, #FAFBFD 100%) #FFFFFF;
@@ -247,6 +558,12 @@
 	.table_box_header{
 		height: 38px;
 		background: #F3F7FF;
+	}
+	.list_box{
+		overflow-y: hidden;
+	}
+	.put_height{
+		height: 218px;
 	}
 	.bottom_setting{
 		border-top:1px dashed #EDEDED;
