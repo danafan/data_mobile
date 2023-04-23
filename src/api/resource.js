@@ -8,6 +8,7 @@ let path = {
   ajaxDeerShopPp:'Common/ajaxDeerShopPp',         //品牌列表
   ajaxCompany:'common/ajaxCompany',               //获取公司列表
   performanceReport:'PerformanceReport/index',    //业绩指标
+  setColumns:'buffer/setcolumns',                 //设置自定义列
 } 
 export default {
   //浏览器获取用户信息(测试用)
@@ -41,5 +42,9 @@ export default {
   //业绩指标
   performanceReport(params){
     return http.get(path.performanceReport, params)
+  },
+  //设置自定义列
+  setColumns(params){
+    return http.post(path.setColumns, params)
   },
 };

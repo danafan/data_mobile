@@ -120,12 +120,15 @@
 					<div class="f16 fw-500 text_color">指标解释</div>
 					<div class="flex ac">
 						<img class="comment_icon" src="../../static/comment_icon.png">
-						<img class="setting_icon ml14" src="../../static/setting_icon.png">
+						<img class="setting_icon ml14" src="../../static/setting_icon.png" @click="perCustomColumn(true)">
 					</div>
 				</div>
 				<div class="list_box" :class="{'put_height':per_arrow_status == 0}">
 					<div class="row flex jsb f14 pl12 pr6" v-for="item in per_title_list">
-						<div>{{item.row_name}}</div>
+						<div class="flex ac">
+							<div>{{item.row_name}}：</div>
+							<img class="comment_icon" src="../../static/comment_icon.png" v-if="item.remark != ''" @click.stop="showDialog(item.remark)"/>
+						</div>
 						<div>{{per_total_data[item.row_field_name]?per_total_data[item.row_field_name]+item.unit:'无'}}</div>
 					</div>
 				</div>
@@ -223,6 +226,24 @@
 <van-overlay :show="loading" class="flex ac jc">
 	<van-loading size="24px" vertical color="#0094ff">加载中...</van-loading>
 </van-overlay>
+<!-- 自定义列表 -->
+<van-overlay :show="custom_overlay" @click="custom_overlay = false">
+	<div class="wrapper" @click.stop>
+		<div class="overlay_title flex ac jse pl20 pr20 relative border_bottom">
+			<div class="title text_color f15 fw-500">自定义列表字段</div>
+			<img class="close_icon" src="../../static/close_icon.png" @click="custom_overlay = false">
+		</div>
+		<div class="custom_list flex flex-warp jsb border_bottom">
+			<div class="custom_item text_color f12 mb10 flex ac jc" :class="{'active_custom':item.is_selected}" v-for="(item,index) in per_view_row" @click="checkSelected(index)">{{item.row_name}}</div>
+			<div style="width: 106px" v-if="per_view_row.length%3 == 2"></div>
+		</div>
+		<div class="flex">
+			<div class="button flex-1 fw-600 f14 text_color" @click="setDefault">恢复默认</div>
+			<div class="line"></div>
+			<div class="button flex-1 fw-600 f14 text_color" @click="saveCustom">保存</div>
+		</div>
+	</div>
+</van-overlay>
 </div>
 </template>
 <script>
@@ -277,8 +298,11 @@
 				per_title_list:[],			//业绩分析表头
 				per_table_list:[],			//业绩分析列表数据
 				per_total_data:{},			//业绩分析总计数据
+				per_view_row:[],			//业绩分析原始
+				per_selected_ids:[],		//业绩分析选中id列表
 				per_arrow_status:0,			//业绩分析表格收起状态（0:收起；1：展开）
 				loading:false,
+				custom_overlay:false,		//自定义列表弹窗
 			}
 		},
 		created(){
@@ -430,6 +454,7 @@
 						per_title_list.splice(per_title_list.findIndex(item => item.row_field_name == "dpmc"), 1);
 						this.per_title_list = per_title_list;
 						this.per_table_list = data.table_list.list;
+						//业绩分析数据
 						if(this.per_table_list.length == 0){
 							this.per_total_data = {};
 						}else if(this.per_table_list.length == 1){
@@ -437,7 +462,14 @@
 						}else{
 							this.per_total_data = data.table_list.total_list;
 						}
+						//业绩分析自定义列表
+						this.per_view_row = data.table_list.view_row;
+						this.per_selected_ids = data.table_list.selected_ids;
+
+
 						
+
+
 						//表格数据
 						// this.shop_table_list_data = data.table_list.list;	//原始
 						// this.clTableData(this.shop_table_list_data);
@@ -466,6 +498,60 @@
 						this.$toast(res.data.msg);
 					}
 				})
+			},
+			//点击业绩分析自定义列
+			perCustomColumn(bool){
+				this.per_view_row.splice(this.per_view_row.findIndex(item => item.row_field_name == "dpmc"), 1);
+				this.per_view_row.map(item => {
+					item['is_selected'] = false;
+					this.per_selected_ids.map(i => {
+						if(item.row_id == i){
+							item['is_selected'] = true;
+						}
+					})
+				})
+				this.custom_overlay = bool;
+			},
+			//自定义恢复默认
+			setDefault(){
+				let arr = this.per_view_row;
+				this.per_view_row = [];
+				arr.map(item => {
+					item['is_selected'] = true;
+				})
+				this.per_view_row = arr;
+			},
+			//切换自定义选中状态
+			checkSelected(index){
+				let o = this.per_view_row[index];
+				o.is_selected = !o.is_selected;
+				this.$set(this.per_view_row,index,o);
+			},
+			//保存自定义列表
+			saveCustom(){
+				let arr = [];
+				this.per_view_row.map(item => {
+					if(item.is_selected){
+						arr.push(item.row_id)
+					}
+				})
+				resource.setColumns({menu_id:'2',row_ids:arr.join(',')}).then(res => {
+					if(res.data.code == 1){
+						this.$toast(res.data.msg);
+						this.custom_overlay = false;
+						//获取列表
+						this.performanceReport();
+					}else{
+						this.$toast(res.data.msg);
+					}
+				});
+			},
+			//展示指标解释
+			showDialog(message){
+				this.$dialog.alert({
+					message: message,
+					confirmButtonText:'我知道了'
+				});
 			}
 		}
 	}
@@ -490,6 +576,21 @@
 		.close_icon{
 			width: 12px;
 			height: 12px;
+		}
+	}
+	.custom_list{
+		padding: 10px;
+		.custom_item{
+			width: 106px;
+			text-align: center;
+			min-height: 38px;
+			background: #FFFFFF;
+			border-radius: 2px;
+			border: 1px solid #EBEBEB;
+		}
+		.active_custom{
+			background: #E8F0FF;
+			border: 1px solid #528BFA;
 		}
 	}
 	.screen_row{
