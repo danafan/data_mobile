@@ -17,15 +17,6 @@
       // this.getUserInfo();
       //钉钉获取code
       this.getCode();
-
-      // this.$router.replace('/index');
-      // if(!this.$store.state.is_ding_talk){  //浏览器
-      //   //获取浏览器用户信息()
-      //   this.GetUserInfo();
-      // }else{  //钉钉
-      //   //获取code
-      //   this.GetCode();
-      // }
     },
     watch:{
       $route:function(n,o){
@@ -44,20 +35,19 @@
         });
       },
       //获取用户信息（测试用）
-      // getUserInfo(){
-      //   resource.login().then(res => {
-      //     if(res.data.code == 1){
-      //       let data = res.data.data;
-      //       localStorage.setItem('login_token',data.login_token);
-      //       localStorage.setItem('ding_user_id',data.ding_user_id);
-      //       localStorage.setItem('secret_key',data.secret_key);
-      //       this.$router.replace('/performance_analysis');
-      //     }else{
-      //       this.$message.warning(res.data.msg);
-      //     }
-      //   })
-      // },
-      
+      getUserInfo(){
+        resource.login().then(res => {
+          if(res.data.code == 1){
+            let data = res.data.data;
+            localStorage.setItem('login_token',data.login_token);
+            localStorage.setItem('ding_user_id',data.ding_user_id);
+            localStorage.setItem('secret_key',data.secret_key);
+            this.$router.replace('/index');
+          }else{
+            this.$message.warning(res.data.msg);
+          }
+        })
+      },
       //获取code
       getCode(){
         dd.ready(() => {
