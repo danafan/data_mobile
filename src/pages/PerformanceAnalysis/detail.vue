@@ -3,10 +3,10 @@
 		<div class="detail_top_box relative width-100 mb10">
 			<img class="detail_back absolute left-0 right-0 width-100 height-100" src="../../static/detail_back.png">
 			<div class="absolute left-0 right-0 width-100 height-100 flex fc ac jc">
-				<div class="f14 white_color mb6">日期范围：{{start_time}}～{{end_time}}</div>
+				<div class="f14 white_color mb6">发货日期：{{start_time}}～{{end_time}}</div>
 				<div class="white_color bold flex">
-					<div class="f28 mr2">{{total}}</div>
-					<div class="f22 relative" style="bottom:-3px;">{{unit}}</div>
+					<div class="f28 mr2">{{total == 'undefined'?'--':total}}</div>
+					<div class="f22 relative" style="bottom:-3px;">{{total == 'undefined'?'':unit}}</div>
 				</div>
 			</div>
 		</div>
@@ -14,8 +14,8 @@
 			<div class="list_title flex ac jsb pl10 pr10">
 				<div class="text_color f16 fw-500">店铺名称</div>
 				<div class="flex ac">
-					<div class="text_color f12 mr3">高低</div>
-					<div class="flex ac" @click="checkSort">
+					<div class="text_color f12 mr3" @click="checkSort">高低</div>
+					<div class="flex ac">
 						<img class="sort_icon" src="../../static/sort_default.png" v-if="sort_type == 0">
 						<img class="sort_icon" src="../../static/sort_asc.png" v-if="sort_type == 1">
 						<img class="sort_icon" src="../../static/sort_desc.png" v-if="sort_type == -1">
@@ -32,6 +32,7 @@
 	</div>
 </template>
 <script>
+	import * as dd from 'dingtalk-jsapi';
 	export default{
 		data(){
 			return{
@@ -66,7 +67,7 @@
 			let query = this.$route.query;
 			this.title = query.title;	//页面标题
 			this.key = query.key;		//要取的字段
-			this.unit = query.unit == 'bfh'?'%':'';	//单位
+			this.unit = query.unit == 'bfh'?'%':query.unit;	//单位
 			this.total = query.total;	//总数
 			this.type = query.type;	//列表来源
 			if(this.type == 'per'){		//业绩分析

@@ -1,23 +1,31 @@
 <template>
 	<div class="container flex fc">
 		<!-- 顶部筛选 -->
-		<div class="top_form width-100 pl20 pr20 flex ac jsb mb10">
-			<div class="flex ac">
-				<div class="f14 text_color">店铺：</div>
-				<el-select ref="storeSelect" v-model="store_ids" size="mini" multiple filterable collapse-tags placeholder="全部" @change="performanceReport">
-					<el-option v-for="item in store_list" :key="item.dept_id" :label="item.shop_name" :value="item.dept_id">
-					</el-option>
-				</el-select>
+		<div class="top_form width-100 pl20 pr20 pt12 pb10 mb10">
+			<div class="flex ac jsb">
+				<div class="flex-1 flex ac mr10">
+					<div class="f14 text_color">店铺：</div>
+					<el-select class="flex-1" ref="storeSelect" v-model="store_ids" size="mini" multiple filterable collapse-tags placeholder="全部" @change="performanceReport">
+						<div>
+							<el-option v-for="item in store_list" :key="item.dept_id" :label="item.shop_name" :value="item.dept_id">
+						</el-option>
+						</div>
+						
+						<div>asdad</div>
+					</el-select>
+				</div>
+				<div class="flex ac" @click="screen_overlay = true">
+					<div class="f14 text_color mr4">高级筛选</div>
+					<img class="screen_icon" src="../../static/screen_icon.png">
+				</div>
 			</div>
-			<div class="flex ac" @click="screen_overlay = true">
-				<div class="f14 text_color mr4">高级筛选</div>
-				<img class="screen_icon" src="../../static/screen_icon.png">
-			</div>
+			<div class="top_line mt9 mb7"></div>
+			<div class="f14 text_color">发货日期：{{start_time}}～{{end_time}}</div>
 		</div>
 		<!-- 下面内容 -->
-		<div class="flex-1 scroll-y hide_scrollbar pl12 pr12">
+		<div ref="scroll_box" class="flex-1 scroll-y hide_scrollbar pl12 pr12">
 			<div class="flex jsb mb10">
-				<div class="view_item pl6 pr8 pt12 pb12">
+				<div class="view_item flex-1 pl6 pr8 pt12 pb12 mr10">
 					<div class="flex ac jsb">
 						<div class="f16 text_color fw-500">销售收入预估</div>
 						<img class="comment_icon" src="../../static/comment_icon.png" @click="setDialog('xssryg')">
@@ -40,7 +48,7 @@
 						<div>{{xssryg.zqnwcl}}%</div>
 					</div>
 				</div>
-				<div class="view_item pl6 pr8 pt12 pb12">
+				<div class="view_item flex-1 pl6 pr8 pt12 pb12">
 					<div class="flex ac jsb">
 						<div class="f16 text_color fw-500">营销费用预估</div>
 						<img class="comment_icon" src="../../static/comment_icon.png" @click="setDialog('yxfyyg')">
@@ -65,7 +73,7 @@
 				</div>
 			</div>
 			<div class="flex jsb mb10">
-				<div class="view_item pl6 pr8 pt12 pb12">
+				<div class="view_item flex-1 pl6 pr8 pt12 pb12 mr10">
 					<div class="flex ac jsb">
 						<div class="f16 text_color fw-500">预估值-贡献毛益</div>
 						<img class="comment_icon" src="../../static/comment_icon.png" @click="setDialog('ygzgxmy')">
@@ -88,7 +96,7 @@
 						<div>{{ygz_gxmy.zqnwcl}}%</div>
 					</div>
 				</div>
-				<div class="view_item pl6 pr8 pt12 pb12">
+				<div class="view_item  flex-1 pl6 pr8 pt12 pb12">
 					<div class="flex ac jsb">
 						<div class="f16 text_color fw-500">预估值-贡献毛益率</div>
 						<img class="comment_icon" src="../../static/comment_icon.png" @click="setDialog('ygzgxmyl')">
@@ -120,7 +128,6 @@
 				<div class="table_box_header flex ac jsb pl10 pr10">
 					<div class="f16 fw-500 text_color">指标解释</div>
 					<div class="flex ac">
-						<img class="comment_icon" src="../../static/comment_icon.png">
 						<img class="setting_icon ml14" src="../../static/setting_icon.png" @click="perCustomColumn('2',true)">
 					</div>
 				</div>
@@ -130,7 +137,7 @@
 							<div>{{item.row_name}}：</div>
 							<img class="comment_icon" src="../../static/comment_icon.png" v-if="item.remark != ''" @click.stop="showDialog(item.remark)"/>
 						</div>
-						<div>{{per_total_data[item.row_field_name]?per_total_data[item.row_field_name]+item.unit:'无'}}</div>
+						<div>{{per_total_data[item.row_field_name]?per_total_data[item.row_field_name]+item.unit:'--'}}</div>
 					</div>
 				</div>
 				<div class="bottom_setting flex jc ac" @click="per_arrow_status = !per_arrow_status">
@@ -144,7 +151,6 @@
 				<div class="table_box_header flex ac jsb pl10 pr10">
 					<div class="f16 fw-500 text_color">营销周报</div>
 					<div class="flex ac">
-						<img class="comment_icon" src="../../static/comment_icon.png">
 						<img class="setting_icon ml14" src="../../static/setting_icon.png" @click="perCustomColumn('1',true)">
 					</div>
 				</div>
@@ -154,7 +160,7 @@
 							<div>{{item.row_name}}：</div>
 							<img class="comment_icon" src="../../static/comment_icon.png" v-if="item.remark != ''" @click.stop="showDialog(item.remark)"/>
 						</div>
-						<div>{{yxzb_total_data[item.row_field_name]?yxzb_total_data[item.row_field_name]+item.unit:'无'}}</div>
+						<div>{{yxzb_total_data[item.row_field_name]?yxzb_total_data[item.row_field_name]+item.unit:'--'}}</div>
 					</div>
 				</div>
 				<div class="bottom_setting flex jc ac" @click="yxzb_arrow_status = !yxzb_arrow_status">
@@ -172,8 +178,9 @@
 					<img class="close_icon" src="../../static/close_icon.png" @click="screen_overlay = false">
 				</div>
 				<div class="screen_row flex ac border_bottom pl10 pr10">
-					<div class="f14 text_color">项目部：</div>
+					<div class="screen_label f14 text_color">项目部：</div>
 					<el-cascader
+					class="flex-1"
 					size="mini"
 					ref="cascader"
 					:options="dept_list"
@@ -184,36 +191,37 @@
 					></el-cascader>
 				</div>
 				<div class="screen_row flex ac border_bottom pl10 pr10">
-					<div class="f14 text_color">平台：</div>
-					<el-select v-model="plat_ids" size="small" @change="getStoreList" multiple filterable collapse-tags placeholder="全部">
+					<div class="screen_label f14 text_color">平台：</div>
+					<el-select class="flex-1" v-model="plat_ids" size="small" @change="getStoreList" multiple filterable collapse-tags placeholder="全部">
 						<el-option v-for="item in plat_list" :key="item" :label="item" :value="item">
 						</el-option>
 					</el-select>
 				</div>
 				<div class="screen_row flex ac border_bottom pl10 pr10">
-					<div class="f14 text_color">店铺：</div>
-					<el-select v-model="store_ids" size="small" multiple filterable collapse-tags placeholder="全部">
+					<div class="screen_label f14 text_color">店铺：</div>
+					<el-select class="flex-1" v-model="store_ids" size="small" multiple filterable collapse-tags :popper-append-to-body="false" placeholder="全部">
 						<el-option v-for="item in store_list" :key="item.dept_id" :label="item.shop_name" :value="item.dept_id">
 						</el-option>
 					</el-select>
 				</div>
 				<div class="screen_row flex ac border_bottom pl10 pr10">
-					<div class="f14 text_color">品牌：</div>
-					<el-select size="small" v-model="pp_ids" multiple filterable collapse-tags placeholder="全部">
+					<div class="screen_label f14 text_color">品牌：</div>
+					<el-select class="flex-1" size="small" v-model="pp_ids" multiple filterable collapse-tags placeholder="全部">
 						<el-option v-for="item in pp_list" :key="item" :label="item" :value="item">
 						</el-option>
 					</el-select>
 				</div>
 				<div class="screen_row flex ac border_bottom pl10 pr10">
-					<div class="f14 text_color">公司：</div>
-					<el-select size="small" v-model="company" multiple filterable collapse-tags placeholder="全部">
+					<div class="screen_label f14 text_color">公司：</div>
+					<el-select class="flex-1" size="small" v-model="company" multiple filterable collapse-tags placeholder="全部">
 						<el-option v-for="item in company_list" :key="item" :label="item" :value="item">
 						</el-option>
 					</el-select>
 				</div>
 				<div class="screen_row flex ac border_bottom pl10 pr10">
-					<div class="f14 text_color">开始日期：</div>
+					<div class="screen_label f14 text_color">开始日期：</div>
 					<el-date-picker
+					class="flex-1"
 					size="small"
 					v-model="start_time"
 					value-format="yyyy-MM-dd"
@@ -223,8 +231,9 @@
 				</el-date-picker>
 			</div>
 			<div class="screen_row flex ac border_bottom pl10 pr10">
-				<div class="f14 text_color">结束日期：</div>
+				<div class="screen_label f14 text_color">结束日期：</div>
 				<el-date-picker
+				class="flex-1"
 				size="small"
 				v-model="end_time"
 				value-format="yyyy-MM-dd"
@@ -234,8 +243,8 @@
 			</el-date-picker>
 		</div>
 		<div class="screen_row flex ac border_bottom pl10 pr10">
-			<div class="f14 text_color">考核店铺：</div>
-			<el-select size="small" v-model="audit_flag" placeholder="请选择">
+			<div class="screen_label f14 text_color">考核店铺：</div>
+			<el-select class="flex-1" size="small" v-model="audit_flag" placeholder="请选择">
 				<el-option label="否" value="0"></el-option>
 				<el-option label="是" value="1"></el-option>
 			</el-select>
@@ -401,7 +410,28 @@
 			}
 			this.$store.commit('setTime',time_data);
 		},
-		methods:{
+		mounted(){
+			// 获取节点
+			this.tableDistance = this.$refs.scroll_box;
+    		// 写入监听事件
+    		this.tableDistance.addEventListener('scroll', (res) => {
+    			this.scrollTop = this.tableDistance.scrollTop
+    		})
+    	},
+    	activated() {
+    		this.$nextTick(() => {
+    			setTimeout(() => {
+    				var bodyWrapper = this.$refs.scroll_box;
+    				bodyWrapper.scrollTop = this.scrollTop
+    			}, 13)
+    		})
+    	},
+    	beforeDestroy() {
+    		this.$refs.table.bodyWrapper.removeEventListener('scroll', (res) => {
+    			this.scrollTop = this.tableDistance.scrollTop
+    		}, false)
+    	},
+    	methods:{
 			//品牌列表
 			ajaxDeerShopPp(){
 				resource.ajaxDeerShopPp().then(res => {
@@ -506,6 +536,7 @@
 			//获取数据
 			performanceReport(){
 				let arg = {
+					equipment:'mobile',
 					platform:this.plat_ids.join(','),
 					dept_id:this.dept_ids.join(','),
 					shop_id:this.store_ids.join(','),
@@ -532,8 +563,14 @@
 						this.jlryg = data.top.jlryg;		
 						//业绩分析表头
 						let per_title_list = data.table_list.title_list;
-						per_title_list.splice(per_title_list.findIndex(item => item.row_field_name == "dpid"), 1);
-						per_title_list.splice(per_title_list.findIndex(item => item.row_field_name == "dpmc"), 1);
+						let per_dpid_index = per_title_list.findIndex(item => item.row_field_name == "dpid");
+						if(per_dpid_index > -1){
+							per_title_list.splice(per_dpid_index, 1);
+						}
+						let per_dpmc_index = per_title_list.findIndex(item => item.row_field_name == "dpmc");
+						if(per_dpmc_index > -1){
+							per_title_list.splice(per_dpmc_index, 1);
+						}
 						this.per_title_list = per_title_list;
 						this.per_table_list = data.table_list.list;
 						//业绩分析数据
@@ -550,8 +587,14 @@
 
 						//营销周报表头
 						let yxzb_title_list = data.week_table_list.title_list;
-						yxzb_title_list.splice(yxzb_title_list.findIndex(item => item.row_field_name == "dpid"), 1);
-						yxzb_title_list.splice(yxzb_title_list.findIndex(item => item.row_field_name == "dpmc"), 1);
+						let yxzb_dpid_index = yxzb_title_list.findIndex(item => item.row_field_name == "dpid");
+						if(yxzb_dpid_index > -1){
+							yxzb_title_list.splice(yxzb_dpid_index, 1);
+						}
+						let yxzb_dpmc_index = yxzb_title_list.findIndex(item => item.row_field_name == "dpmc");
+						if(yxzb_dpmc_index > -1){
+							yxzb_title_list.splice(yxzb_dpmc_index, 1);
+						}
 						this.yxzb_title_list = yxzb_title_list;
 						this.yxzb_table_list = data.week_table_list.list;
 						//营销周报数据
@@ -673,6 +716,12 @@
 .el-select .el-tag{
 	max-width: 62%!important;
 }
+.el-cascader-menu{
+	min-width: 120px!important;
+}
+.el-cascader__tags .el-tag{
+	max-width: 45%!important;
+}
 </style>
 <style lang="less" scoped>
 .wrapper{
@@ -712,7 +761,11 @@
 		}
 	}
 	.screen_row{
-		height: 54px;
+		padding-top:10px;
+		padding-bottom:10px;
+		.screen_label{
+			width: 70px;
+		}
 	}
 	.border_bottom{
 		border-bottom:1px solid #F8F8F8;
@@ -729,7 +782,6 @@
 	}
 }
 .top_form{
-	height: 48px;
 	background: linear-gradient(180deg, #E5EAFF 0%, #EAF0FF 32%, #FAFBFD 100%) #FFFFFF;
 	box-shadow: 0px 2px 4px 0px rgba(230,230,230,0.5);
 	border-radius: 0px 0px 30px 30px;
@@ -737,9 +789,12 @@
 		width: 17px;
 		height: 17px;
 	}
+	.top_line{
+		background:#EDEDED;
+		height: 1px;
+	}
 }
 .view_item{
-	width: 172px;
 	height: 176px;
 	background: #F9FBFF;
 	border-radius: 12px;
@@ -782,7 +837,7 @@
 		overflow-y: hidden;
 	}
 	.put_height{
-		height: 218px;
+		max-height: 218px;
 	}
 	.bottom_setting{
 		border-top:1px dashed #EDEDED;

@@ -14,14 +14,17 @@
   export default {
     created() {
       //获取浏览器用户信息(测试用，之后改为只从钉钉进入)
-      // this.getUserInfo();
+      this.getUserInfo();
       //钉钉获取code
-      this.getCode();
+      // this.getCode();
     },
     watch:{
       $route:function(n,o){
-        //设置标题栏文字
-        this.setTabBarTitle(n.name)
+        if(n.path != '/performance_detail'){
+          //设置标题栏文字
+          this.setTabBarTitle(n.name)
+        }
+        
       }
     },
     methods: {
