@@ -13,8 +13,8 @@ module.exports = {
 			}
 		}
 	},
-	// assetsDir: "web",
-	lintOnSave: true,
+	assetsDir: "dataMobile",
+	publicPath:'../',
 	chainWebpack: (config)=>{
 		config.resolve.alias
 		.set('vendor',resolve('./src/vendor'))

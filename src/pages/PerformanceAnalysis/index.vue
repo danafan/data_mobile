@@ -20,7 +20,7 @@
 				<div class="view_item pl6 pr8 pt12 pb12">
 					<div class="flex ac jsb">
 						<div class="f16 text_color fw-500">销售收入预估</div>
-						<img class="comment_icon" src="../../static/comment_icon.png">
+						<img class="comment_icon" src="../../static/comment_icon.png" @click="setDialog('xssryg')">
 					</div>
 					<div class="item_value f28 bold">{{xssryg.xssryg}}万</div>
 					<div class="small_value flex jsb small_text">
@@ -43,7 +43,7 @@
 				<div class="view_item pl6 pr8 pt12 pb12">
 					<div class="flex ac jsb">
 						<div class="f16 text_color fw-500">营销费用预估</div>
-						<img class="comment_icon" src="../../static/comment_icon.png">
+						<img class="comment_icon" src="../../static/comment_icon.png" @click="setDialog('yxfyyg')">
 					</div>
 					<div class="item_value f28 bold">{{yxfyyg.yxfyyg}}万</div>
 					<div class="small_value flex jsb small_text">
@@ -68,7 +68,7 @@
 				<div class="view_item pl6 pr8 pt12 pb12">
 					<div class="flex ac jsb">
 						<div class="f16 text_color fw-500">预估值-贡献毛益</div>
-						<img class="comment_icon" src="../../static/comment_icon.png">
+						<img class="comment_icon" src="../../static/comment_icon.png" @click="setDialog('ygzgxmy')">
 					</div>
 					<div class="item_value f28 bold">{{ygz_gxmy.ygz_gxmy}}万</div>
 					<div class="small_value flex jsb small_text">
@@ -91,7 +91,7 @@
 				<div class="view_item pl6 pr8 pt12 pb12">
 					<div class="flex ac jsb">
 						<div class="f16 text_color fw-500">预估值-贡献毛益率</div>
-						<img class="comment_icon" src="../../static/comment_icon.png">
+						<img class="comment_icon" src="../../static/comment_icon.png" @click="setDialog('ygzgxmyl')">
 					</div>
 					<div class="item_value f28 bold">{{ygz_gxmyl.gxmylyg}}%</div>
 					<div class="small_value flex jsb small_text">
@@ -107,7 +107,7 @@
 			<div class="jlryg width-100 pl6 pr8 pt12 pb12 mb10" v-if="jlryg">
 				<div class="flex ac jsb">
 					<div class="f16 text_color fw-500">净利润预估</div>
-					<img class="comment_icon" src="../../static/comment_icon.png">
+					<img class="comment_icon" src="../../static/comment_icon.png"  @click="setDialog('jlryg')">
 				</div>
 				<div class="item_value f28 bold">{{jlryg.jlryg}}万</div>
 				<div class="small_value flex small_text">
@@ -115,16 +115,17 @@
 					<div>{{jlryg.jlrl}}%</div>
 				</div>
 			</div>
-			<div class="table_box">
+			<!-- 业绩分析 -->
+			<div class="table_box mb10">
 				<div class="table_box_header flex ac jsb pl10 pr10">
 					<div class="f16 fw-500 text_color">指标解释</div>
 					<div class="flex ac">
 						<img class="comment_icon" src="../../static/comment_icon.png">
-						<img class="setting_icon ml14" src="../../static/setting_icon.png" @click="perCustomColumn(true)">
+						<img class="setting_icon ml14" src="../../static/setting_icon.png" @click="perCustomColumn('2',true)">
 					</div>
 				</div>
 				<div class="list_box" :class="{'put_height':per_arrow_status == 0}">
-					<div class="row flex jsb f14 pl12 pr6" v-for="item in per_title_list">
+					<div class="row flex jsb f14 pl12 pr6" v-for="item in per_title_list" @click="getDetail(item.row_name,item.row_field_name,item.unit,per_total_data[item.row_field_name],'per')">
 						<div class="flex ac">
 							<div>{{item.row_name}}：</div>
 							<img class="comment_icon" src="../../static/comment_icon.png" v-if="item.remark != ''" @click.stop="showDialog(item.remark)"/>
@@ -135,6 +136,30 @@
 				<div class="bottom_setting flex jc ac" @click="per_arrow_status = !per_arrow_status">
 					<div class="setting_color f12 mr4">{{per_arrow_status == 0?'展开':'收起'}}</div>
 					<img class="arrow_icon" src="../../static/down_icon.png" v-if="per_arrow_status == 0">
+					<img class="arrow_icon" src="../../static/arrow_up.png" v-else>
+				</div>
+			</div>
+			<!-- 营销周报 -->
+			<div class="table_box mb10">
+				<div class="table_box_header flex ac jsb pl10 pr10">
+					<div class="f16 fw-500 text_color">营销周报</div>
+					<div class="flex ac">
+						<img class="comment_icon" src="../../static/comment_icon.png">
+						<img class="setting_icon ml14" src="../../static/setting_icon.png" @click="perCustomColumn('1',true)">
+					</div>
+				</div>
+				<div class="list_box" :class="{'put_height':yxzb_arrow_status == 0}">
+					<div class="row flex jsb f14 pl12 pr6" v-for="item in yxzb_title_list" @click="getDetail(item.row_name,item.row_field_name,item.unit,per_total_data[item.row_field_name],'yxzb')">
+						<div class="flex ac">
+							<div>{{item.row_name}}：</div>
+							<img class="comment_icon" src="../../static/comment_icon.png" v-if="item.remark != ''" @click.stop="showDialog(item.remark)"/>
+						</div>
+						<div>{{yxzb_total_data[item.row_field_name]?yxzb_total_data[item.row_field_name]+item.unit:'无'}}</div>
+					</div>
+				</div>
+				<div class="bottom_setting flex jc ac" @click="yxzb_arrow_status = !yxzb_arrow_status">
+					<div class="setting_color f12 mr4">{{yxzb_arrow_status == 0?'展开':'收起'}}</div>
+					<img class="arrow_icon" src="../../static/down_icon.png" v-if="yxzb_arrow_status == 0">
 					<img class="arrow_icon" src="../../static/arrow_up.png" v-else>
 				</div>
 			</div>
@@ -234,8 +259,8 @@
 			<img class="close_icon" src="../../static/close_icon.png" @click="custom_overlay = false">
 		</div>
 		<div class="custom_list flex flex-warp jsb border_bottom">
-			<div class="custom_item text_color f12 mb10 flex ac jc" :class="{'active_custom':item.is_selected}" v-for="(item,index) in per_view_row" @click="checkSelected(index)">{{item.row_name}}</div>
-			<div style="width: 106px" v-if="per_view_row.length%3 == 2"></div>
+			<div class="custom_item text_color f12 mb10 flex ac jc" :class="{'active_custom':item.is_selected}" v-for="(item,index) in current_view_row" @click="checkSelected(index)">{{item.row_name}}</div>
+			<div style="width: 106px" v-if="current_view_row.length%3 == 2"></div>
 		</div>
 		<div class="flex">
 			<div class="button flex-1 fw-600 f14 text_color" @click="setDefault">恢复默认</div>
@@ -244,6 +269,15 @@
 		</div>
 	</div>
 </van-overlay>
+<!-- 整个模块的提示 -->
+<van-dialog v-model:show="show_toast" confirmButtonText="我知道了">
+	<div class="pt10 pr10 pb10 pl10">
+		<div class="flex f12" style="line-height: 22px" v-for="item in toast_list">
+			<div class="space_nowrap bold">{{item.label}}</div>
+			<div>{{item.value}}</div>
+		</div>
+	</div>
+</van-dialog>
 </div>
 </template>
 <script>
@@ -289,7 +323,7 @@
 				},
 				start_time:getMonthStartDate(),			//发货时间
 				end_time:getCurrentDate(),				//发货时间
-				audit_flag:'0',				//是否考核店铺
+				audit_flag:'0',							//是否考核店铺
 				xssryg:{},							//销售收入预估
 				yxfyyg:{},							//营销费用预估
 				ygz_gxmy:{},						//预估值-贡献毛益
@@ -301,8 +335,50 @@
 				per_view_row:[],			//业绩分析原始
 				per_selected_ids:[],		//业绩分析选中id列表
 				per_arrow_status:0,			//业绩分析表格收起状态（0:收起；1：展开）
-				loading:false,
+				yxzb_title_list:[],			//营销周报表头
+				yxzb_table_list:[],			//营销周报列表数据
+				yxzb_total_data:{},			//营销周报总计数据
+				yxzb_view_row:[],			//营销周报原始
+				yxzb_selected_ids:[],		//营销周报选中id列表
+				yxzb_arrow_status:0,		//营销周报表格收起状态（0:收起；1：展开）
 				custom_overlay:false,		//自定义列表弹窗
+				current_view_row:[],		//当前展示的自定义列表
+				loading:false,
+				show_toast:false,
+				toast_list:[],
+				xssryg_toast:[
+				'销售收入预估：销售发货金额-售后退款金额-线下退款金额预估+冲减收入',
+				'销售收入月目标：销售收入月目标',
+				'月度完成率：销售收入预估/销售收入月目标',
+				'日累计-销售收入：销售收入日目标累计',
+				'周期内完成率：销售收入预估/销售收入日目标累计'
+				],
+				//营销费用预估
+				yxfyyg_toast:[
+				'营销费用预估：财务用友系统计算的营销费用',
+				'营销费用月目标：营销费用月目标',
+				'月度使用率：营销费用预估/营销费用月目标',
+				'日累计-营销费用：营销费用日目标累计',
+				'周期内使用率：营销费用预估/营销费用日目标累计'
+				],
+				//预估值-贡献毛益
+				ygzgxmy_toast:[
+				'预估值-贡献毛益：毛利额-营销费用-买一送一费用-店铺团队费用-项目部分摊费用-事业部分摊费用',
+				'贡献毛益月目标：贡献毛益月目标',
+				'月度完成率：贡献毛益预估/贡献毛益月目标',
+				'日累计-贡献毛益：贡献毛益日目标累计',
+				'周期内完成率：贡献毛益预估/贡献毛益日目标累计'
+				],
+				//预估值-贡献毛益率
+				ygzgxmyl_toast:[
+				'预估值-贡献毛益率：贡献毛益预估/销售收入预估',
+				'贡献毛益率月目标：贡献毛益月目标/销售收入月目标',
+				'日累计-贡献毛益率：贡献毛益日目标/销售收入日目标'
+				],
+				//净利润预估
+				jlryg_toast:[
+				'净利润预估：毛利额-营销费用-买一送一费用-店铺团队费用-项目部分摊费用-事业部分摊费用-公摊费用预估-客服费用预估-物流类费用预估'
+				],
 			}
 		},
 		created(){
@@ -318,6 +394,12 @@
 			this.ajaxCompany();
 			//获取数据
 			this.performanceReport();
+			//设置开始和结束时间
+			let time_data = {
+				start_time:this.start_time,
+				end_time:this.end_time
+			}
+			this.$store.commit('setTime',time_data);
 		},
 		methods:{
 			//品牌列表
@@ -326,7 +408,7 @@
 					if(res.data.code == 1){
 						this.pp_list = res.data.data;
 					}else{
-						this.$message.warning(res.data.msg);
+						this.$toast(res.data.msg);
 					}
 				})
 			},
@@ -336,7 +418,7 @@
 					if(res.data.code == 1){
 						this.company_list = res.data.data;
 					}else{
-						this.$message.warning(res.data.msg);
+						this.$toast(res.data.msg);
 					}
 				})
 			},
@@ -382,7 +464,7 @@
 					if(res.data.code == 1){
 						this.dept_list = res.data.data;
 					}else{
-						this.$message.warning(res.data.msg);
+						this.$toast(res.data.msg);
 					}
 				})
 			},	
@@ -392,7 +474,7 @@
 					if(res.data.code == 1){
 						this.plat_list = res.data.data;
 					}else{
-						this.$message.warning(res.data.msg);
+						this.$toast(res.data.msg);
 					}
 				})
 			},
@@ -404,7 +486,7 @@
 					if(res.data.code == 1){
 						this.store_list = res.data.data;
 					}else{
-						this.$message.warning(res.data.msg);
+						this.$toast(res.data.msg);
 					}
 				})
 			},
@@ -466,96 +548,132 @@
 						this.per_view_row = data.table_list.view_row;
 						this.per_selected_ids = data.table_list.selected_ids;
 
-
-						
-
-
-						//表格数据
-						// this.shop_table_list_data = data.table_list.list;	//原始
-						// this.clTableData(this.shop_table_list_data);
-						// this.default_data_list = this.data_list;
-						// this.total_shop_data = data.table_list.total;
-						// this.total_list[0] = data.table_list.total_list;
-						// this.view_row = data.table_list.view_row;
-						// this.selected_ids = data.table_list.selected_ids;
-						
-						// 营销周报部分
-						// 左侧表头
-						// data.week_table_list.title_list.map(item => {
-						// 	item.show_sort = false;		//是否显示排序标签
-						// 	item.sort = 0;				//默认排序
-						// })
-						// this.week_label_list = data.week_table_list.title_list;
-						// //表格数据
-						// this.week_table_list_data = data.week_table_list.list;	//原始
-						// this.clTableWeekData(this.week_table_list_data);
-						// this.default_week_data_list = this.week_data_list;
-						// this.total_week_data = data.week_table_list.total;
-						// this.week_total_list[0] = data.week_table_list.total_list;
-						// this.view_week_row = data.week_table_list.view_row;
-						// this.selected_week_ids = data.week_table_list.selected_ids;
+						//营销周报表头
+						let yxzb_title_list = data.week_table_list.title_list;
+						yxzb_title_list.splice(yxzb_title_list.findIndex(item => item.row_field_name == "dpid"), 1);
+						yxzb_title_list.splice(yxzb_title_list.findIndex(item => item.row_field_name == "dpmc"), 1);
+						this.yxzb_title_list = yxzb_title_list;
+						this.yxzb_table_list = data.week_table_list.list;
+						//营销周报数据
+						if(this.yxzb_table_list.length == 0){
+							this.yxzb_total_data = {};
+						}else if(this.yxzb_table_list.length == 1){
+							this.yxzb_total_data = this.yxzb_table_list[0];
+						}else{
+							this.yxzb_total_data = data.week_table_list.total_list;
+						}
+						//营销周报自定义列表
+						this.yxzb_view_row = data.week_table_list.view_row;
+						this.yxzb_selected_ids = data.week_table_list.selected_ids;
+						//设置store
+						let store_data = {
+							per_table_list:this.per_table_list,
+							yxzb_table_list:this.yxzb_table_list
+						}
+						this.$store.commit('setTableData',store_data);
 					}else{
 						this.$toast(res.data.msg);
 					}
 				})
 			},
 			//点击业绩分析自定义列
-			perCustomColumn(bool){
-				this.per_view_row.splice(this.per_view_row.findIndex(item => item.row_field_name == "dpmc"), 1);
-				this.per_view_row.map(item => {
-					item['is_selected'] = false;
-					this.per_selected_ids.map(i => {
-						if(item.row_id == i){
-							item['is_selected'] = true;
-						}
+			perCustomColumn(menu_id,bool){
+				this.menu_id = menu_id;
+				if(this.menu_id == '2'){	//业绩分析
+					this.current_view_row = this.per_view_row;
+					this.current_view_row.splice(this.current_view_row.findIndex(item => item.row_field_name == "dpmc"), 1);
+					this.current_view_row.map(item => {
+						item['is_selected'] = false;
+						this.per_selected_ids.map(i => {
+							if(item.row_id == i){
+								item['is_selected'] = true;
+							}
+						})
 					})
-				})
+				}else{						//营销周报
+					this.current_view_row = this.yxzb_view_row;
+					this.current_view_row.splice(this.current_view_row.findIndex(item => item.row_field_name == "dpmc"), 1);
+					this.current_view_row.map(item => {
+						item['is_selected'] = false;
+						this.yxzb_selected_ids.map(i => {
+							if(item.row_id == i){
+								item['is_selected'] = true;
+							}
+						})
+					})
+				}
 				this.custom_overlay = bool;
 			},
 			//自定义恢复默认
 			setDefault(){
-				let arr = this.per_view_row;
-				this.per_view_row = [];
-				arr.map(item => {
+				let current_view_arr = this.current_view_row;
+				this.current_view_row = [];
+				current_view_arr.map(item => {
 					item['is_selected'] = true;
 				})
-				this.per_view_row = arr;
+				this.current_view_row = current_view_arr;
 			},
 			//切换自定义选中状态
 			checkSelected(index){
-				let o = this.per_view_row[index];
-				o.is_selected = !o.is_selected;
-				this.$set(this.per_view_row,index,o);
+				let current_view_item = this.current_view_row[index];
+				current_view_item.is_selected = !current_view_item.is_selected;
+				this.$set(this.current_view_row,index,current_view_item);
 			},
 			//保存自定义列表
 			saveCustom(){
 				let arr = [];
-				this.per_view_row.map(item => {
+				this.current_view_row.map(item => {
 					if(item.is_selected){
 						arr.push(item.row_id)
 					}
 				})
-				resource.setColumns({menu_id:'2',row_ids:arr.join(',')}).then(res => {
+				resource.setColumns({menu_id:this.menu_id,row_ids:arr.join(',')}).then(res => {
 					if(res.data.code == 1){
 						this.$toast(res.data.msg);
 						this.custom_overlay = false;
 						//获取列表
 						this.performanceReport();
+						this.per_arrow_status = 0;
+						this.yxzb_arrow_status = 0;
 					}else{
 						this.$toast(res.data.msg);
 					}
 				});
 			},
+			//查看顶部几个大模块的备注
+			setDialog(type){
+				this.toast_list = [];
+				this[`${type}_toast`].map(item => {
+					let o = {
+						label:item.split('：')[0] + '：',
+						value:item.split('：')[1]
+					}
+					this.toast_list.push(o)
+				})
+				this.show_toast = true;
+			},
 			//展示指标解释
 			showDialog(message){
 				this.$dialog.alert({
 					message: message,
+					messageAlign:'left',
 					confirmButtonText:'我知道了'
 				});
+			},
+			// 点击跳转详情
+			getDetail(row_name,row_field_name,unit,total,type){
+				let dw = unit == '%'?'bfh':unit;
+				this.$router.push(`/performance_detail?title=${row_name}&key=${row_field_name}&unit=${dw}&total=${total}&type=${type}`);
 			}
 		}
 	}
+
 </script>
+<style type="text/css">
+.el-select .el-tag{
+	max-width: 62%!important;
+}
+</style>
 <style lang="less" scoped>
 .wrapper{
 	position: absolute;
