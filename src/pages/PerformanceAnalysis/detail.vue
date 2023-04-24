@@ -5,8 +5,8 @@
 			<div class="absolute left-0 right-0 width-100 height-100 flex fc ac jc">
 				<div class="f14 white_color mb6">发货日期：{{start_time}}～{{end_time}}</div>
 				<div class="white_color bold flex">
-					<div class="f28 mr2">{{total == 'undefined'?'--':total}}</div>
-					<div class="f22 relative" style="bottom:-3px;">{{total == 'undefined'?'':unit}}</div>
+					<div class="f28 mr2">{{total}}</div>
+					<div class="f22 relative" style="bottom:-1px;">{{unit}}</div>
 				</div>
 			</div>
 		</div>

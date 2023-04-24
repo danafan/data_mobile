@@ -155,12 +155,12 @@
 					</div>
 				</div>
 				<div class="list_box" :class="{'put_height':yxzb_arrow_status == 0}">
-					<div class="row flex jsb f14 pl12 pr6" v-for="item in yxzb_title_list" @click="getDetail(item.row_name,item.row_field_name,item.unit,per_total_data[item.row_field_name],'yxzb')">
+					<div class="row flex jsb f14 pl12 pr6" v-for="item in yxzb_title_list" @click="getDetail(item.row_name,item.row_field_name,item.unit,yxzb_total_data[item.row_field_name],'yxzb')">
 						<div class="flex ac">
 							<div>{{item.row_name}}：</div>
 							<img class="comment_icon" src="../../static/comment_icon.png" v-if="item.remark != ''" @click.stop="showDialog(item.remark)"/>
 						</div>
-						<div>{{yxzb_total_data[item.row_field_name]?yxzb_total_data[item.row_field_name]+item.unit:'--'}}</div>
+						<div>{{yxzb_total_data[item.row_field_name]}}{{item.unit}}</div>
 					</div>
 				</div>
 				<div class="bottom_setting flex jc ac" @click="yxzb_arrow_status = !yxzb_arrow_status">
@@ -175,7 +175,9 @@
 			<div class="wrapper" @click.stop>
 				<div class="overlay_title flex ac jse pl20 pr20 relative border_bottom">
 					<div class="title text_color f15 fw-500">选择筛选条件</div>
-					<img class="close_icon" src="../../static/close_icon.png" @click="screen_overlay = false">
+					<div style="width: 50px" @click="screen_overlay = false">
+						<img class="close_icon" src="../../static/close_icon.png">
+					</div>
 				</div>
 				<div class="screen_row flex ac border_bottom pl10 pr10">
 					<div class="screen_label f14 text_color">项目部：</div>
@@ -265,7 +267,9 @@
 	<div class="wrapper" @click.stop>
 		<div class="overlay_title flex ac jse pl20 pr20 relative border_bottom">
 			<div class="title text_color f15 fw-500">自定义列表字段</div>
-			<img class="close_icon" src="../../static/close_icon.png" @click="custom_overlay = false">
+			<div style="width: 50px" @click="custom_overlay = false">
+				<img class="close_icon" src="../../static/close_icon.png">
+			</div>
 		</div>
 		<div class="custom_list flex flex-warp jsb border_bottom">
 			<div class="custom_item text_color f12 mb10 flex ac jc" :class="{'active_custom':item.is_selected}" v-for="(item,index) in current_view_row" @click="checkSelected(index)">{{item.row_name}}</div>
@@ -705,7 +709,9 @@
 			},
 			// 点击跳转详情
 			getDetail(row_name,row_field_name,unit,total,type){
+				console.log(total)
 				let dw = unit == '%'?'bfh':unit;
+				console.log(dw)
 				this.$router.push(`/performance_detail?title=${row_name}&key=${row_field_name}&unit=${dw}&total=${total}&type=${type}`);
 			}
 		}

@@ -48,7 +48,7 @@
 .top_content{
 	height: 330px;
 	.menu_item{
-		width: 172px;
+		width: 49%;
 		height: 84px;
 		background: #FFFFFF;
 		border-radius: 10px;
