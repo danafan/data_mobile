@@ -6,7 +6,7 @@
 				<div class="f14 white_color mb6">发货日期：{{start_time}}～{{end_time}}</div>
 				<div class="white_color bold flex">
 					<div class="f28 mr2">{{total}}</div>
-					<div class="f22 relative" style="bottom:-1px;">{{unit}}</div>
+					<div class="f22 relative" :class="[{'bottom_2':unit == '万'},{'bottom_5':unit == '%'}]">{{unit}}</div>
 				</div>
 			</div>
 		</div>
@@ -134,6 +134,12 @@
 <style lang="less" scoped>
 .detail_top_box{
 	height: 120px;
+}
+.bottom_2{
+	bottom:-2px;
+}
+.bottom_5{
+	bottom:-5px;
 }
 .bottom_content{
 	width: 350px;

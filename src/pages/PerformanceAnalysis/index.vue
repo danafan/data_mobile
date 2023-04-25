@@ -5,13 +5,14 @@
 			<div class="flex ac jsb">
 				<div class="flex-1 flex ac mr10">
 					<div class="f14 text_color">店铺：</div>
-					<el-select class="flex-1" ref="storeSelect" v-model="store_ids" size="mini" multiple filterable collapse-tags placeholder="全部" @change="performanceReport">
-						<div>
-							<el-option v-for="item in store_list" :key="item.dept_id" :label="item.shop_name" :value="item.dept_id">
+					<el-select ref="screenStore" class="flex-1 index_page" popper-class="ts" v-model="store_ids" size="mini" multiple filterable collapse-tags placeholder="全部" @remove-tag="performanceReport">
+						<el-option v-for="item in store_list" :key="item.dept_id" :label="item.shop_name" :value="item.dept_id">
 						</el-option>
+						<div class="setting_row width-100 absolute flex">
+							<div class="button flex-1 fw-600 f14 text_color" @click="store_ids = []">重置</div>
+							<div class="line"></div>
+							<div class="button flex-1 fw-600 f14 text_color" @click="performanceReport">确定</div>
 						</div>
-						
-						<div>asdad</div>
 					</el-select>
 				</div>
 				<div class="flex ac" @click="screen_overlay = true">
@@ -137,7 +138,7 @@
 							<div>{{item.row_name}}：</div>
 							<img class="comment_icon" src="../../static/comment_icon.png" v-if="item.remark != ''" @click.stop="showDialog(item.remark)"/>
 						</div>
-						<div>{{per_total_data[item.row_field_name]?per_total_data[item.row_field_name]+item.unit:'--'}}</div>
+						<div>{{per_total_data[item.row_field_name]}}{{item.unit}}</div>
 					</div>
 				</div>
 				<div class="bottom_setting flex jc ac" @click="per_arrow_status = !per_arrow_status">
@@ -172,10 +173,10 @@
 		</div>
 		<!-- 高级筛选 -->
 		<van-overlay :show="screen_overlay" @click="screen_overlay = false">
-			<div class="wrapper" @click.stop>
+			<div class="wrapper top5" @click.stop>
 				<div class="overlay_title flex ac jse pl20 pr20 relative border_bottom">
 					<div class="title text_color f15 fw-500">选择筛选条件</div>
-					<div style="width: 50px" @click="screen_overlay = false">
+					<div class="flex jse ac" style="width: 50px;height: 50px" @click="screen_overlay = false">
 						<img class="close_icon" src="../../static/close_icon.png">
 					</div>
 				</div>
@@ -194,28 +195,28 @@
 				</div>
 				<div class="screen_row flex ac border_bottom pl10 pr10">
 					<div class="screen_label f14 text_color">平台：</div>
-					<el-select class="flex-1" v-model="plat_ids" size="small" @change="getStoreList" multiple filterable collapse-tags placeholder="全部">
+					<el-select ref="platformSelect" class="flex-1" v-model="plat_ids" size="small" @change="getStoreList" multiple filterable collapse-tags placeholder="全部">
 						<el-option v-for="item in plat_list" :key="item" :label="item" :value="item">
 						</el-option>
 					</el-select>
 				</div>
 				<div class="screen_row flex ac border_bottom pl10 pr10">
 					<div class="screen_label f14 text_color">店铺：</div>
-					<el-select class="flex-1" v-model="store_ids" size="small" multiple filterable collapse-tags :popper-append-to-body="false" placeholder="全部">
+					<el-select ref="storeSelect" class="flex-1" v-model="store_ids" size="small" multiple filterable collapse-tags placeholder="全部">
 						<el-option v-for="item in store_list" :key="item.dept_id" :label="item.shop_name" :value="item.dept_id">
 						</el-option>
 					</el-select>
 				</div>
 				<div class="screen_row flex ac border_bottom pl10 pr10">
 					<div class="screen_label f14 text_color">品牌：</div>
-					<el-select class="flex-1" size="small" v-model="pp_ids" multiple filterable collapse-tags placeholder="全部">
+					<el-select class="flex-1" size="small" v-model="pp_ids" multiple collapse-tags placeholder="全部">
 						<el-option v-for="item in pp_list" :key="item" :label="item" :value="item">
 						</el-option>
 					</el-select>
 				</div>
 				<div class="screen_row flex ac border_bottom pl10 pr10">
 					<div class="screen_label f14 text_color">公司：</div>
-					<el-select class="flex-1" size="small" v-model="company" multiple filterable collapse-tags placeholder="全部">
+					<el-select class="flex-1" size="small" v-model="company" multiple collapse-tags placeholder="全部">
 						<el-option v-for="item in company_list" :key="item" :label="item" :value="item">
 						</el-option>
 					</el-select>
@@ -229,6 +230,7 @@
 					value-format="yyyy-MM-dd"
 					type="date"
 					:picker-options="startDateOptions"
+					:editable="false"
 					placeholder="开始日期">
 				</el-date-picker>
 			</div>
@@ -241,6 +243,7 @@
 				value-format="yyyy-MM-dd"
 				type="date"
 				:picker-options="endDateOptions"
+				:editable="false"
 				placeholder="结束日期">
 			</el-date-picker>
 		</div>
@@ -264,10 +267,10 @@
 </van-overlay>
 <!-- 自定义列表 -->
 <van-overlay :show="custom_overlay" @click="custom_overlay = false">
-	<div class="wrapper" @click.stop>
+	<div class="wrapper top50" @click.stop>
 		<div class="overlay_title flex ac jse pl20 pr20 relative border_bottom">
 			<div class="title text_color f15 fw-500">自定义列表字段</div>
-			<div style="width: 50px" @click="custom_overlay = false">
+			<div class="flex jse ac" style="width: 50px;height: 50px" @click="custom_overlay = false">
 				<img class="close_icon" src="../../static/close_icon.png">
 			</div>
 		</div>
@@ -430,6 +433,13 @@
     			}, 13)
     		})
     	},
+    	beforeRouteLeave(to,from,next){
+			this.$refs.storeSelect.blur();
+			this.$refs.platformSelect.blur();
+			this.$refs.screenStore.blur();
+			this.$refs.cascader.dropDownVisible = false;
+			next();
+		},
     	beforeDestroy() {
     		this.$refs.table.bodyWrapper.removeEventListener('scroll', (res) => {
     			this.scrollTop = this.tableDistance.scrollTop
@@ -539,6 +549,9 @@
 			},
 			//获取数据
 			performanceReport(){
+				this.$nextTick(()=>{
+					this.$refs.screenStore.blur();
+				})
 				let arg = {
 					equipment:'mobile',
 					platform:this.plat_ids.join(','),
@@ -627,8 +640,14 @@
 			perCustomColumn(menu_id,bool){
 				this.menu_id = menu_id;
 				if(this.menu_id == '2'){	//业绩分析
-					this.current_view_row = this.per_view_row;
-					this.current_view_row.splice(this.current_view_row.findIndex(item => item.row_field_name == "dpmc"), 1);
+					this.current_view_row = JSON.parse(JSON.stringify(this.per_view_row));
+					let dpmc_index = this.current_view_row.findIndex(item => item.row_field_name == "dpmc");
+
+					this.prt_dpmc_id = this.per_selected_ids.filter(item => {
+						return item == this.current_view_row[dpmc_index].row_id;
+					})
+
+					this.current_view_row.splice(dpmc_index, 1);
 					this.current_view_row.map(item => {
 						item['is_selected'] = false;
 						this.per_selected_ids.map(i => {
@@ -638,7 +657,7 @@
 						})
 					})
 				}else{						//营销周报
-					this.current_view_row = this.yxzb_view_row;
+					this.current_view_row = JSON.parse(JSON.stringify(this.yxzb_view_row));
 					this.current_view_row.splice(this.current_view_row.findIndex(item => item.row_field_name == "dpmc"), 1);
 					this.current_view_row.map(item => {
 						item['is_selected'] = false;
@@ -674,14 +693,15 @@
 						arr.push(item.row_id)
 					}
 				})
+				if(this.menu_id == '2' && this.prt_dpmc_id.length > 0){
+					arr.unshift(this.prt_dpmc_id[0])
+				}
 				resource.setColumns({menu_id:this.menu_id,row_ids:arr.join(',')}).then(res => {
 					if(res.data.code == 1){
 						this.$toast(res.data.msg);
 						this.custom_overlay = false;
 						//获取列表
 						this.performanceReport();
-						this.per_arrow_status = 0;
-						this.yxzb_arrow_status = 0;
 					}else{
 						this.$toast(res.data.msg);
 					}
@@ -728,13 +748,24 @@
 .el-cascader__tags .el-tag{
 	max-width: 45%!important;
 }
+.ts .el-scrollbar{
+	padding-bottom: 42px!important;
+}
+.setting_row{
+	border-top: 1px solid #F2F2F2;
+	bottom:0;
+}
+.el-select-dropdown__wrap {
+	max-height: 165px!important;
+}
+.el-picker-panel__icon-btn {
+	font-size: 20px!important;
+}
+.el-scrollbar__wrap::-webkit-scrollbar{display:none}
 </style>
 <style lang="less" scoped>
 .wrapper{
 	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%,-50%);
 	width: 354px;
 	background: #FFFFFF;
 	border-radius: 8px;
@@ -767,8 +798,8 @@
 		}
 	}
 	.screen_row{
-		padding-top:10px;
-		padding-bottom:10px;
+		padding-top:6px;
+		padding-bottom:6px;
 		.screen_label{
 			width: 70px;
 		}
@@ -776,16 +807,27 @@
 	.border_bottom{
 		border-bottom:1px solid #F8F8F8;
 	}
-	.line{
-		background:#F4F4F4;
-		width: 1px;
-		height: 42px;
-	}
-	.button{
-		height: 42px;
-		text-align: center;
-		line-height: 42px;
-	}
+	
+}
+.top50{
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+}
+.top5{
+	top: 5px;
+	left: 50%;
+	transform: translate(-50%,0);
+}
+.line{
+	background:#F4F4F4;
+	width: 1px;
+	height: 42px;
+}
+.button{
+	height: 42px;
+	text-align: center;
+	line-height: 42px;
 }
 .top_form{
 	background: linear-gradient(180deg, #E5EAFF 0%, #EAF0FF 32%, #FAFBFD 100%) #FFFFFF;
@@ -799,6 +841,7 @@
 		background:#EDEDED;
 		height: 1px;
 	}
+
 }
 .view_item{
 	height: 176px;

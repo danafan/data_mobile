@@ -11,7 +11,8 @@ module.exports = {
 				ws: true,
 				changOlrigin: true,		
 			}
-		}
+		},
+		// host:"127.0.0.1",  
 	},
 	assetsDir: "dataMobile",
 	publicPath:'../',
