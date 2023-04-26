@@ -4,9 +4,9 @@
 			<img class="detail_back absolute left-0 right-0 width-100 height-100" src="../../static/detail_back.png">
 			<div class="absolute left-0 right-0 width-100 height-100 flex fc ac jc">
 				<div class="f14 white_color mb6">发货日期：{{start_time}}～{{end_time}}</div>
-				<div class="white_color bold flex">
+				<div class="white_color bold flex ae">
 					<div class="f28 mr2">{{total}}</div>
-					<div class="f22 relative" :class="[{'bottom_2':unit == '万'},{'bottom_5':unit == '%'}]">{{unit}}</div>
+					<div class="f28">{{unit}}</div>
 				</div>
 			</div>
 		</div>

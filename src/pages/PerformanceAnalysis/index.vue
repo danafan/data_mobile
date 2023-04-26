@@ -434,12 +434,12 @@
     		})
     	},
     	beforeRouteLeave(to,from,next){
-			this.$refs.storeSelect.blur();
-			this.$refs.platformSelect.blur();
-			this.$refs.screenStore.blur();
-			this.$refs.cascader.dropDownVisible = false;
-			next();
-		},
+    		this.$refs.storeSelect.blur();
+    		this.$refs.platformSelect.blur();
+    		this.$refs.screenStore.blur();
+    		this.$refs.cascader.dropDownVisible = false;
+    		next();
+    	},
     	beforeDestroy() {
     		this.$refs.table.bodyWrapper.removeEventListener('scroll', (res) => {
     			this.scrollTop = this.tableDistance.scrollTop
@@ -552,6 +552,12 @@
 				this.$nextTick(()=>{
 					this.$refs.screenStore.blur();
 				})
+				//设置开始和结束时间
+				let time_data = {
+					start_time:this.start_time,
+					end_time:this.end_time
+				}
+				this.$store.commit('setTime',time_data);
 				let arg = {
 					equipment:'mobile',
 					platform:this.plat_ids.join(','),
@@ -646,7 +652,6 @@
 					this.prt_dpmc_id = this.per_selected_ids.filter(item => {
 						return item == this.current_view_row[dpmc_index].row_id;
 					})
-
 					this.current_view_row.splice(dpmc_index, 1);
 					this.current_view_row.map(item => {
 						item['is_selected'] = false;
@@ -658,7 +663,6 @@
 					})
 				}else{						//营销周报
 					this.current_view_row = JSON.parse(JSON.stringify(this.yxzb_view_row));
-					this.current_view_row.splice(this.current_view_row.findIndex(item => item.row_field_name == "dpmc"), 1);
 					this.current_view_row.map(item => {
 						item['is_selected'] = false;
 						this.yxzb_selected_ids.map(i => {
@@ -731,7 +735,6 @@
 			getDetail(row_name,row_field_name,unit,total,type){
 				console.log(total)
 				let dw = unit == '%'?'bfh':unit;
-				console.log(dw)
 				this.$router.push(`/performance_detail?title=${row_name}&key=${row_field_name}&unit=${dw}&total=${total}&type=${type}`);
 			}
 		}
